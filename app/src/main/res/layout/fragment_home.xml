@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    android:id="@+id/whole_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="vertical"
+    android:scrollbarThumbVertical="@android:color/darker_gray"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="90dp">
+
+    <TextView
+        android:id="@+id/firstTXT"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="TRENDING"
+    android:textColor="#FF453A"
+    android:layout_marginTop="48dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginBottom="12dp"
+    android:fontFamily="sans-serif-black"
+    android:textStyle="bold"
+        android:visibility="gone"
+    android:textSize="28sp"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/trendingRecycler"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    android:clipToPadding="false"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp" />
+
+    <TextView
+        android:id="@+id/secondTXT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TOP RATED"
+        android:textColor="#FF453A"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="12dp"
+        android:fontFamily="sans-serif-black"
+        android:visibility="gone"
+        android:textStyle="bold"
+        android:textSize="28sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/topRatedRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:clipToPadding="false"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"/>
+
+    <TextView
+        android:id="@+id/thirdTXT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="POPULAR"
+        android:textColor="#FF453A"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="12dp"
+        android:fontFamily="sans-serif-black"
+        android:visibility="gone"
+        android:textStyle="bold"
+        android:textSize="28sp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/popularRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:clipToPadding="false"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"/>
+
+
+        <ImageView
+            android:id="@+id/imgNoInternet"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:src="@drawable/wifi"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/txtNoInternet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="No internet connection"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@android:color/white"/>
+</LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
