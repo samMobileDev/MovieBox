@@ -8,6 +8,9 @@ import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.example.moviebox.data.FilmDatabase
+import com.example.moviebox.data.FilmEntity
+import com.example.moviebox.data.MovieApi
 import com.example.moviebox.databinding.FragmentDetailsBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch

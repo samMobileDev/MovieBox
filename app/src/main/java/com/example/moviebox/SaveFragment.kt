@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.moviebox.data.FilmDatabase
 import com.example.moviebox.databinding.FragmentSaveBinding
 import kotlinx.coroutines.launch
 

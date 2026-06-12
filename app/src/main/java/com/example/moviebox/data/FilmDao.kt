@@ -1,15 +1,16 @@
-package com.example.moviebox
+package com.example.moviebox.data
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.moviebox.data.FilmEntity
 
 @Dao
 interface FilmDao {
 
-@Insert(onConflict = OnConflictStrategy.REPLACE)
+@Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
 suspend fun insertFilm(film: FilmEntity)
 
 

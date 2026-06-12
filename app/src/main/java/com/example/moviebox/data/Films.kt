@@ -1,4 +1,4 @@
-package com.example.moviebox
+package com.example.moviebox.data
 
 data class Films(
     val id:Int,

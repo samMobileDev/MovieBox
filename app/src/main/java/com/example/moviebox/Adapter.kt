@@ -1,17 +1,17 @@
 package com.example.moviebox
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.moviebox.data.FilmEntity
+import com.example.moviebox.data.Films
 import com.example.moviebox.databinding.ItemBinding
 import com.example.moviebox.databinding.ItemEtcBinding
 import com.example.moviebox.databinding.ItemSavedBinding
 import com.example.moviebox.databinding.ItemTrendBinding
 
-class Adapter(private val data: List<Films>,private val onClick: (Films) -> Unit) : RecyclerView.Adapter<Adapter.ViewHolder>() {
+class Adapter(private val data: List<Films>, private val onClick: (Films) -> Unit) : RecyclerView.Adapter<Adapter.ViewHolder>() {
     class ViewHolder(val binding: ItemBinding) : RecyclerView.ViewHolder(binding.root)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -40,7 +40,7 @@ class Adapter(private val data: List<Films>,private val onClick: (Films) -> Unit
 
 }
 
-class TrendingAdapter(private val data: List<Films>,private val onClick: (Films) -> Unit) : RecyclerView.Adapter<TrendingAdapter.ViewHolder>() {
+class TrendingAdapter(private val data: List<Films>, private val onClick: (Films) -> Unit) : RecyclerView.Adapter<TrendingAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemTrendBinding) : RecyclerView.ViewHolder(binding.root)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -60,7 +60,7 @@ override fun getItemCount(): Int {
 }
 }
 
-class SecondAdapter(private val data: List<Films>,private val onClick: (Films) -> Unit) : RecyclerView.Adapter<SecondAdapter.ViewHolder>() {
+class SecondAdapter(private val data: List<Films>, private val onClick: (Films) -> Unit) : RecyclerView.Adapter<SecondAdapter.ViewHolder>() {
     class ViewHolder(val binding: ItemEtcBinding) : RecyclerView.ViewHolder(binding.root)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemEtcBinding.inflate(LayoutInflater.from(parent.context), parent, false)
