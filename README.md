@@ -1,83 +1,94 @@
 # 🎬 MovieBox
 
-MovieBox is an Android app where you can browse movies, search for them, and save favorites. It uses TMDB API for all movie data.
+MovieBox is a modern Android application for discovering movies, searching for titles, viewing detailed information, and saving favorites for offline access.
+
+The application uses the TMDB API for movie data and Room for local storage.
 
 ---
 
-## What you can do in the app
+## ✨ Features
 
-### Home screen
+### 🏠 Home
+- Trending movies
+- Popular movies
+- Top-rated movies
+- Horizontally scrollable movie lists
 
-* see trending movies
-* see top rated movies
-* see popular movies
-* scroll through lists horizontally
+### 🔍 Search
+- Search movies by title
+- Real-time API requests
+- Loading and error states
+- Search results display
 
-### Search
+### 🎬 Movie Details
+- Movie overview
+- Rating and vote count
+- Release date
+- Popularity
+- Poster and backdrop images
+- Navigation from movie lists to details
 
-* search movies by name
-* get results from API
-* shows loading and error states
-
-### Movie details
-
-* movie overview
-* rating and vote count
-* release date
-* popularity
-* poster and backdrop images
-* open details from any list
-
-### Saved movies
-
-* save movies locally
-* remove from favorites
-* stored with Room
-* works without internet
+### ❤️ Favorites
+- Save movies locally
+- Remove movies from favorites
+- Persistent storage with Room
+- Favorites available without an internet connection
 
 ---
 
-## Tech used
+## 🛠 Tech Stack
 
-* Kotlin
-* XML layouts
-* Retrofit
-* Coroutines
-* Room database
-* RecyclerView
-* ViewBinding
-* Material Design
-
----
-
-## API
-
-TMDB API is used for:
-
-* trending movies
-* popular movies
-* top rated movies
-* search
-* movie details
+- **Kotlin**
+- **XML**
+- **Retrofit**
+- **Coroutines**
+- **Room**
+- **RecyclerView**
+- **ViewBinding**
+- **Material Design**
 
 ---
 
-## How it works (simple version)
+## 🌐 API
 
-* API calls are done with Retrofit
-* Coroutines handle background work
-* UI updates based on loading/error/success
-* favorites are saved locally with Room
-* navigation is done with fragments
+MovieBox uses the **TMDB API** to retrieve:
 
----
-
-## Screenshots
-
-![movie box](movieBox.png)
+- Trending movies
+- Popular movies
+- Top-rated movies
+- Search results
+- Movie details
 
 ---
 
-## Notes
+## 🏗 Architecture
 
-App is fully working. It uses online data + local storage for saved movies
+The application follows an **MVVM-based architecture**.
+
+- Retrofit handles network communication
+- Coroutines handle asynchronous operations
+- Room provides local data persistence
+- ViewBinding is used for view access
+- Fragments handle screen navigation
+- UI states handle loading, success, and error scenarios
+
+---
+
+## 📱 Screenshots
+
+![MovieBox](movieBox.png)
+
+---
+
+## 🚀 Getting Started
+
+1. Clone the repository
+2. Open the project in Android Studio
+3. Add your TMDB API key
+4. Build and run the application
+
+---
+
+## 📌 Project Status
+
+The application is fully functional and combines remote API data with local offline storage.
