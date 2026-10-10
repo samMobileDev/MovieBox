@@ -37,4 +37,10 @@ interface MovieApi{
         @Path("movie_id") movieId: String,
         @Query("api_key") apiKey: String
     ): Response<VideoResponse>
+
+    @GET("movie/{movie_id}/watch/providers")
+    suspend fun getWatchProviders(
+        @Path("movie_id") movieId: String,
+        @Query("api_key") apiKey: String
+    ): Response<WatchProvidersResponse>
 }

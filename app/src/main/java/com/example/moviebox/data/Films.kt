@@ -37,3 +37,19 @@ data class Video(
     val type: String
 )
 
+data class WatchProvidersResponse(
+    val results: Map<String, CountryProviders>?
+)
+
+data class CountryProviders(
+    val link: String?,
+    val flatrate: List<WatchProvider>?,
+    val free: List<WatchProvider>?,
+    val ads: List<WatchProvider>?,
+    val rent: List<WatchProvider>?,
+    val buy: List<WatchProvider>?
+)
+
+data class WatchProvider(
+    val provider_name: String
+)

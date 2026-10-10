@@ -16,6 +16,9 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import com.example.moviebox.data.WatchProvider
+import java.util.Locale
+import kotlin.coroutines.cancellation.CancellationException
 
 class DetailsFragment : Fragment(R.layout.fragment_details) {
     private var _binding: FragmentDetailsBinding? = null
@@ -99,6 +102,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         val popularity = arguments?.getDouble("popularity")
         val vote_count = arguments?.getInt("vote_count")
         val movieId = arguments?.getInt("id") ?: -1
+
+        loadWatchProviders(api, movieId)
 
 
         //function to get genres and runtime by id
@@ -226,9 +231,58 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
             }
         }
 
+    }
 
+    private fun loadWatchProviders(api: MovieApi, movieId: Int) {
+        val country = Locale.getDefault().country.ifEmpty { "US" }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val response = api.getWatchProviders(movieId.toString(), TMDB_KEY)
+                val section = _binding?.watchSection ?: return@launch
 
+                val info = if (response.isSuccessful) {
+                    response.body()?.results?.get(country)
+                } else null
+
+                val lines = listOfNotNull(
+                    info?.flatrate.toLine("Stream"),
+                    info?.free.toLine("Free"),
+                    info?.ads.toLine("Free with ads"),
+                    info?.rent.toLine("Rent"),
+                    info?.buy.toLine("Buy")
+                )
+
+                section.txtWatchProviders.text = if (lines.isEmpty()) {
+                    "No streaming info available for $country"
+                } else {
+                    lines.joinToString("\n")
+                }
+
+                val link = info?.link
+                if (link.isNullOrEmpty()) {
+                    section.btnWatchLink.visibility = View.GONE
+                } else {
+                    section.btnWatchLink.visibility = View.VISIBLE
+                    section.btnWatchLink.setOnClickListener {
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
+                    }
+                }
+                section.root.visibility = View.VISIBLE
+
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                _binding?.watchSection?.root?.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun List<WatchProvider>?.toLine(label: String): String? =
+        if (this.isNullOrEmpty()) null else "$label: ${joinToString { it.provider_name }}"
+
+    private companion object {
+        const val TMDB_KEY = "6f71a51841cae2c9bfcab7b8abae02e6"
     }
 }
 
