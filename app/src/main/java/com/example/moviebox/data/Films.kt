@@ -59,5 +59,41 @@ data class CountryProviders(
 )
 
 data class WatchProvider(
-    val provider_name: String
+    val provider_id: Int? = null,
+    val provider_name: String,
+    val logo_path: String? = null
+)
+
+data class CreditsResponse(
+    val cast: List<CastMember>?,
+    val crew: List<CrewMember>?
+)
+
+data class CastMember(
+    val id: Int,
+    val name: String,
+    val character: String?,
+    val profile_path: String?
+)
+
+data class CrewMember(
+    val id: Int,
+    val name: String,
+    val job: String?,
+    val profile_path: String?
+)
+
+data class ReviewsResponse(
+    val results: List<Review>?
+)
+
+data class Review(
+    val id: String,
+    val author: String,
+    val content: String,
+    val author_details: AuthorDetails?
+)
+
+data class AuthorDetails(
+    val rating: Double?
 )

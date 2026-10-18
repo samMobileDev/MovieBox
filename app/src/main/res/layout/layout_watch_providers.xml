@@ -16,10 +16,18 @@
         android:textSize="22sp"
         android:textStyle="bold" />
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerProviderLogos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:orientation="horizontal" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardWatchProviders"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:backgroundTint="#1AFFFFFF"
         app:cardCornerRadius="20dp"
         app:strokeWidth="0dp">

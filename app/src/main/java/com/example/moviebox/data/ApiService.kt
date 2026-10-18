@@ -57,4 +57,22 @@ interface MovieApi {
         @Path("movie_id") movieId: String,
         @Query("api_key") apiKey: String
     ): Response<WatchProvidersResponse>
+
+    @GET("movie/{movie_id}/credits")
+    suspend fun getMovieCredits(
+        @Path("movie_id") movieId: String,
+        @Query("api_key") apiKey: String
+    ): Response<CreditsResponse>
+
+    @GET("movie/{movie_id}/similar")
+    suspend fun getSimilarMovies(
+        @Path("movie_id") movieId: String,
+        @Query("api_key") apiKey: String
+    ): Response<MovieResponse>
+
+    @GET("movie/{movie_id}/reviews")
+    suspend fun getMovieReviews(
+        @Path("movie_id") movieId: String,
+        @Query("api_key") apiKey: String
+    ): Response<ReviewsResponse>
 }
