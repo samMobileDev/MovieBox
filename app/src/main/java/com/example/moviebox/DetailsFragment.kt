@@ -3,20 +3,20 @@ package com.example.moviebox
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.moviebox.data.FilmDatabase
 import com.example.moviebox.data.FilmEntity
 import com.example.moviebox.data.MovieApi
+import com.example.moviebox.data.WatchProvider
 import com.example.moviebox.databinding.FragmentDetailsBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.example.moviebox.data.WatchProvider
 import java.util.Locale
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -50,11 +50,11 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         lifecycleScope.launch {
             val saved = dao.getFilmById(filmId)
 
-                if (saved != null){
-                    binding.btnSaved.setImageResource(R.drawable.fav)
-                }else{
-                    binding.btnSaved.setImageResource(R.drawable.simple_fav)
-                }
+            if (saved != null) {
+                binding.btnSaved.setImageResource(R.drawable.fav)
+            } else {
+                binding.btnSaved.setImageResource(R.drawable.simple_fav)
+            }
         }
 
 
@@ -105,7 +105,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
 
         loadWatchProviders(api, movieId)
 
-
         //function to get genres and runtime by id
         lifecycleScope.launch {
 
@@ -124,7 +123,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
             try {
                 val funGenres = api.getMovieDetails(
                     movieId = movieId.toString(),
-                    apiKey = "6f71a51841cae2c9bfcab7b8abae02e6"
+                    apiKey = TMDB_KEY
                 )
                 if (funGenres.isSuccessful) {
                     val details = funGenres.body()
@@ -194,9 +193,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         }
 
 
-
-
-
         //back button
         binding.btnBack.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
@@ -208,7 +204,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                 try {
                     val funVideos = api.getMovieVideos(
                         movieId = movieId.toString(),
-                        apiKey = "6f71a51841cae2c9bfcab7b8abae02e6"
+                        apiKey = TMDB_KEY
                     )
                     if (funVideos.isSuccessful) {
                         val videos = funVideos.body()?.results
@@ -219,7 +215,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                                 Uri.parse("vnd.youtube:${video.key}")
                             )
                             startActivity(intent)
-                        }else{
+                        } else {
                             Snackbar.make(binding.root, "No trailer found", Snackbar.LENGTH_SHORT).show()
                         }
                     }
@@ -281,8 +277,12 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     private fun List<WatchProvider>?.toLine(label: String): String? =
         if (this.isNullOrEmpty()) null else "$label: ${joinToString { it.provider_name }}"
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private companion object {
         const val TMDB_KEY = "6f71a51841cae2c9bfcab7b8abae02e6"
     }
 }
-

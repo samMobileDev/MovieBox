@@ -1,35 +1,43 @@
 package com.example.moviebox.data
 
 data class Films(
-    val id:Int,
-    val title:String,
-    val poster_path:String,
-    val overview:String,
-    val vote_average:Double,
-    val release_date:String,
-    val popularity:Double,
-    val vote_count:Int,
-    val backdrop_path:String,
-    )
+    val id: Int,
+    val title: String,
+    val poster_path: String?,
+    val overview: String?,
+    val vote_average: Double,
+    val release_date: String?,
+    val popularity: Double,
+    val vote_count: Int,
+    val backdrop_path: String?,
+    val genre_ids: List<Int>? = null
+)
 
 data class MovieResponse(
-    val results: List<Films>
+    val page: Int = 1,
+    val results: List<Films>,
+    val total_pages: Int = 1,
+    val total_results: Int = 0
 )
 
 data class MovieDetails(
     val runtime: Int,
-    val genres : List<Genres>,
-    val release_date: String,
+    val genres: List<Genres>,
+    val release_date: String?,
     val popularity: Double,
     val vote_count: Int,
-    val backdrop_path: String)
+    val backdrop_path: String?
+)
 
 data class Genres(
+    val id: Int = 0,
     val name: String
 )
+
 data class VideoResponse(
     val results: List<Video>
 )
+
 data class Video(
     val key: String,
     val name: String,
