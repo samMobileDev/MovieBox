@@ -8,9 +8,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -289,61 +287,59 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         renderRecentSearches()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                try {
-                    isSearchLoading = true
-                    binding.progressBar.visibility = View.VISIBLE
-                    binding.searchTrendR.visibility = View.GONE
-                    binding.errorLayout.visibility = View.GONE
+            try {
+                isSearchLoading = true
+                binding.progressBar.visibility = View.VISIBLE
+                binding.searchTrendR.visibility = View.GONE
+                binding.errorLayout.visibility = View.GONE
 
-                    val response = api.getMovie(
-                        apiKey = TMDB_KEY,
-                        query = query,
-                        year = selectedYear,
-                        page = 1
-                    )
+                val response = api.getMovie(
+                    apiKey = TMDB_KEY,
+                    query = query,
+                    year = selectedYear,
+                    page = 1
+                )
 
-                    isSearchLoading = false
-                    binding.progressBar.visibility = View.GONE
+                isSearchLoading = false
+                binding.progressBar.visibility = View.GONE
 
-                    if (response.isSuccessful) {
-                        val body = response.body()
-                        if (body != null) {
-                            var results = body.results
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body != null) {
+                        var results = body.results
 
-                            // Filter locally by genre if a genre is selected
-                            selectedGenreId?.let { genreId ->
-                                results = results.filter { film ->
-                                    film.genre_ids?.contains(genreId) == true
-                                }
+                        // Filter locally by genre if a genre is selected
+                        selectedGenreId?.let { genreId ->
+                            results = results.filter { film ->
+                                film.genre_ids?.contains(genreId) == true
                             }
-
-                            if (results.isEmpty()) {
-                                Snackbar.make(binding.root, "No results found", Snackbar.LENGTH_SHORT).show()
-                                binding.recyclerview.visibility = View.GONE
-                                return@repeatOnLifecycle
-                            }
-
-                            totalSearchPages = body.total_pages
-                            searchAdapter?.submitList(results)
-                            binding.recyclerview.visibility = View.VISIBLE
                         }
-                    } else {
-                        Snackbar.make(binding.root, "Error: ${response.code()}", Snackbar.LENGTH_SHORT).show()
-                    }
 
-                } catch (e: IOException) {
-                    isSearchLoading = false
-                    binding.progressBar.visibility = View.GONE
-                    binding.errorLayout.visibility = View.VISIBLE
-                    binding.recyclerview.visibility = View.GONE
-                } catch (e: Exception) {
-                    if (e is CancellationException) throw e
-                    isSearchLoading = false
-                    binding.progressBar.visibility = View.GONE
-                    binding.errorLayout.visibility = View.VISIBLE
-                    binding.recyclerview.visibility = View.GONE
+                        if (results.isEmpty()) {
+                            Snackbar.make(binding.root, "No results found", Snackbar.LENGTH_SHORT).show()
+                            binding.recyclerview.visibility = View.GONE
+                            return@launch
+                        }
+
+                        totalSearchPages = body.total_pages
+                        searchAdapter?.submitList(results)
+                        binding.recyclerview.visibility = View.VISIBLE
+                    }
+                } else {
+                    Snackbar.make(binding.root, "Error: ${response.code()}", Snackbar.LENGTH_SHORT).show()
                 }
+
+            } catch (e: IOException) {
+                isSearchLoading = false
+                binding.progressBar.visibility = View.GONE
+                binding.errorLayout.visibility = View.VISIBLE
+                binding.recyclerview.visibility = View.GONE
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                isSearchLoading = false
+                binding.progressBar.visibility = View.GONE
+                binding.errorLayout.visibility = View.VISIBLE
+                binding.recyclerview.visibility = View.GONE
             }
         }
     }
@@ -393,50 +389,48 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         if (resetPage) currentPopularPage = 1
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                try {
-                    isPopularLoading = true
-                    binding.progressBar.visibility = View.VISIBLE
-                    binding.recyclerview.visibility = View.GONE
-                    binding.errorLayout.visibility = View.GONE
+            try {
+                isPopularLoading = true
+                binding.progressBar.visibility = View.VISIBLE
+                binding.recyclerview.visibility = View.GONE
+                binding.errorLayout.visibility = View.GONE
 
-                    val genreString = selectedGenreId?.toString()
+                val genreString = selectedGenreId?.toString()
 
-                    val response = if (selectedGenreId != null || selectedYear != null) {
-                        api.discoverMovies(
-                            apiKey = TMDB_KEY,
-                            genreId = genreString,
-                            year = selectedYear,
-                            page = currentPopularPage
-                        )
-                    } else {
-                        api.getPopular(apiKey = TMDB_KEY, page = currentPopularPage)
+                val response = if (selectedGenreId != null || selectedYear != null) {
+                    api.discoverMovies(
+                        apiKey = TMDB_KEY,
+                        genreId = genreString,
+                        year = selectedYear,
+                        page = currentPopularPage
+                    )
+                } else {
+                    api.getPopular(apiKey = TMDB_KEY, page = currentPopularPage)
+                }
+
+                isPopularLoading = false
+                binding.progressBar.visibility = View.GONE
+
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body != null) {
+                        totalPopularPages = body.total_pages
+                        popularAdapter?.submitList(body.results)
+                        binding.searchTrendR.visibility = View.VISIBLE
                     }
-
-                    isPopularLoading = false
-                    binding.progressBar.visibility = View.GONE
-
-                    if (response.isSuccessful) {
-                        val body = response.body()
-                        if (body != null) {
-                            totalPopularPages = body.total_pages
-                            popularAdapter?.submitList(body.results)
-                            binding.searchTrendR.visibility = View.VISIBLE
-                        }
-                    } else {
-                        binding.errorLayout.visibility = View.VISIBLE
-                    }
-
-                } catch (e: IOException) {
-                    isPopularLoading = false
-                    binding.progressBar.visibility = View.GONE
-                    binding.errorLayout.visibility = View.VISIBLE
-                } catch (e: Exception) {
-                    if (e is CancellationException) throw e
-                    isPopularLoading = false
-                    binding.progressBar.visibility = View.GONE
+                } else {
                     binding.errorLayout.visibility = View.VISIBLE
                 }
+
+            } catch (e: IOException) {
+                isPopularLoading = false
+                binding.progressBar.visibility = View.GONE
+                binding.errorLayout.visibility = View.VISIBLE
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                isPopularLoading = false
+                binding.progressBar.visibility = View.GONE
+                binding.errorLayout.visibility = View.VISIBLE
             }
         }
     }
@@ -534,6 +528,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     }
 
     private companion object {
-        const val TMDB_KEY = "6f71a51841cae2c9bfcab7b8abae02e6"
+        val TMDB_KEY = BuildConfig.TMDB_API_KEY
     }
 }

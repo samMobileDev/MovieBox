@@ -59,7 +59,7 @@
 4. FLAWS, BUGS, & ARCHITECTURAL ISSUES
 --------------------------------------------------------------------------------
 * Security Vulnerability - Hardcoded API Key:
-  - The TMDB API key ("6f71a51841cae2c9bfcab7b8abae02e6") is hardcoded directly in multiple Kotlin source files (HomeFragment, SearchFragment, DetailsFragment).
+  - The TMDB API key ("<redacted>") is hardcoded directly in multiple Kotlin source files (HomeFragment, SearchFragment, DetailsFragment).
   - Risk: Exposes API keys in version control and compiled binaries. Key should be stored in local.properties and accessed via BuildConfig.
 
 * Architectural Deficit - Lack of MVVM / Repository Pattern:

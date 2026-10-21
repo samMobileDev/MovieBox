@@ -391,6 +391,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     }
 
     private companion object {
-        const val TMDB_KEY = "6f71a51841cae2c9bfcab7b8abae02e6"
+        val TMDB_KEY = BuildConfig.TMDB_API_KEY
     }
 }
