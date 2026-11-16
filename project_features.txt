@@ -1,0 +1,45 @@
+MOVIEBOX - CONCISE PROJECT FEATURES SUMMARY
+
+1. Splash & Onboarding (SecondActivity):
+   - First-launch onboarding check using SharedPreferences with fade-in animations.
+
+2. Fragment-Based Navigation (MainActivity):
+   - Single activity container hosting three core tabs via BottomNavigationView.
+
+3. Home Dashboard (HomeFragment):
+   - Concurrent TMDB API requests fetching Trending (with snapped horizontal carousel), Top Rated, and Popular movie lists, complete with offline error handling.
+
+4. Search & Discovery (SearchFragment):
+   - Pre-loads popular movies in a 2-column grid and supports live query searching against TMDB with input validation and loading indicators.
+
+5. Movie Details & Metadata (DetailsFragment):
+   - Renders ratings, synopses, and backdrop images via Glide, formats runtimes, and populates genre tags using FlexboxLayout.
+
+6. YouTube Trailer Playback (DetailsFragment):
+   - Fetches trailer keys from TMDB and launches videos via YouTube intents.
+
+7. Offline Favorites (SaveFragment & Room DB):
+   - Local database persistence using Room (FilmDatabase, FilmDao) allowing users to bookmark, view, and delete saved movies offline.
+
+8. Streaming Watch Providers Integration (DetailsFragment & ApiService):
+   - Automatically queries regional streaming availability (flatrate, free, rent, buy) via TMDB's watch providers endpoint and populates a watch section with external streaming web links.
+
+9. Multi-Page Pagination Support (ApiService):
+   - Implements page query parameters across search, discovery, trending, top-rated, and popular API endpoints to support multi-page pagination and data loading.
+
+10. Movie Discovery Feature (ApiService):
+    - Integrates TMDB's discover movie endpoint allowing filtering by genre and release year.
+
+11. Cast & Crew / Credits Integration (DetailsFragment & ApiService):
+    - Fetches production crew and cast member details (profile pictures, actor names, and character roles) via TMDB's credits endpoint.
+
+12. Similar & Recommended Movies Carousel (DetailsFragment & ApiService):
+    - Fetches related films based on the viewed movie via TMDB's similar endpoint to display recommended titles.
+
+13. User Reviews & Audience Feedback (DetailsFragment & ApiService):
+    - Fetches authentic user reviews, author details, and star ratings via TMDB's reviews endpoint.
+
+14. Streaming Provider Logos Integration (DetailsFragment & Watch Providers):
+    - Displays regional streaming provider logos in a horizontal RecyclerView alongside streaming availability and web links.
+
+

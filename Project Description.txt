@@ -1,0 +1,130 @@
+================================================================================
+                             PROJECT DESCRIPTION: MOVIEBOX
+================================================================================
+
+1. GENERAL INFORMATION
+--------------------------------------------------------------------------------
+* Project Name: MovieBox
+* Application Type: Native Android Mobile Application
+* Programming Language: Kotlin
+* Target SDK: Android 16 (API 36) | Minimum SDK: Android 7.0 (API 24)
+* Architecture / Design: Fragment-based Single Activity Architecture with ViewBinding
+* Core Objective: Browsing trending/popular/top-rated movies, searching TMDB catalog, viewing detailed metadata and YouTube trailers, and saving movies offline using local database persistence.
+
+
+2. ARCHITECTURE & TECHNICAL STACK
+--------------------------------------------------------------------------------
+* Networking: Retrofit 2 with Gson Converter for RESTful API communication with TMDB (The Movie Database).
+* Offline Local Persistence: Room Database Library (FilmDatabase, FilmDao, FilmEntity) for saving favorited movies locally.
+* Image Processing: Glide (v4.16.0) for asynchronous loading, caching, and rendering of movie poster and backdrop images.
+* UI Components: ViewBinding, ConstraintLayout, RecyclerView (Horizontal carousels, 2-column Grid, and vertical lists), FlexboxLayout for genre tags, and PagerSnapHelper for horizontal carousel snapping.
+* Concurrency: Kotlin Coroutines & lifecycleScope / repeatOnLifecycle for asynchronous task management.
+
+
+3. CURRENT FEATURES
+--------------------------------------------------------------------------------
+* Onboarding & Splash Screen (SecondActivity):
+  - Welcome screen with fade-in alpha layout animation.
+  - Utilizes SharedPreferences ("isSecondActivityOpened") to ensure onboarding displays only on initial app launch, auto-redirecting to MainActivity on subsequent launches.
+
+* Main Hub & Navigation (MainActivity):
+  - Single host activity utilizing BottomNavigationView for smooth navigation across three core fragments: Home, Search, and Saved.
+
+* Home Screen (HomeFragment):
+  - Concurrently fetches movie catalog from TMDB API across three distinct categories:
+    1. Weekly Trending Movies: Displayed in a snapped horizontal carousel via PagerSnapHelper.
+    2. Top Rated Movies: Displayed in a horizontal scrollable list.
+    3. Popular Movies: Displayed in a horizontal scrollable list.
+  - Offline & Network Error Management: Displays custom Snackbar notifications and offline graphics (imgNoInternet, txtNoInternet) on network failure.
+  - Item Click Navigation: Passes movie metadata via Bundle to DetailsFragment upon selection.
+
+* Search Screen (SearchFragment):
+  - Default State: Pre-loads current Popular movies in a 2-column Grid Layout.
+  - Interactive Search: Query-based searching using TMDB's /search/movie endpoint.
+  - Search Validation: Validates user input (prevents empty inputs and restricts max length).
+  - Feedback UI: Displays ProgressBar while searching and shows error states/Snackbars if no matching results are found or internet is unavailable.
+
+* Movie Details Screen (DetailsFragment):
+  - Metadata View: Renders title, overview, vote average (rating), release date, popularity score, vote count, poster, and backdrop images.
+  - Dynamic Details API Call: Asynchronously fetches extra movie details (getMovieDetails) to display genre tags as chips using FlexboxLayout and formats movie runtime into readable format (e.g., "1h 45min").
+  - Bookmarking & Favorites (Room DB): Instant toggle to save or unsave movies to/from local Room DB, updating heart icon state dynamically (fav.png vs simple_fav.png).
+  - Trailer Playback: Asynchronously calls TMDB getMovieVideos endpoint to locate YouTube trailer key and launches native YouTube app or browser via Intent (vnd.youtube:).
+
+* Saved / Favorites Screen (SaveFragment):
+  - Local Database Query: Fetches locally saved movies from Room DB via FilmDao.getAllFilms().
+  - Deletion Support: Allows users to remove saved movies with instant list updating in SavedAdapter.
+  - Empty State Handling: Displays an empty state text indicator (txtEmptySaved) when no saved movies exist.
+
+
+4. FLAWS, BUGS, & ARCHITECTURAL ISSUES
+--------------------------------------------------------------------------------
+* Security Vulnerability - Hardcoded API Key:
+  - The TMDB API key ("<redacted>") is hardcoded directly in multiple Kotlin source files (HomeFragment, SearchFragment, DetailsFragment).
+  - Risk: Exposes API keys in version control and compiled binaries. Key should be stored in local.properties and accessed via BuildConfig.
+
+* Architectural Deficit - Lack of MVVM / Repository Pattern:
+  - Direct instantiation of Retrofit and Room instances inside Fragments.
+  - Network and database operations run directly inside Fragment lifecycle scopes without ViewModels or Repositories.
+  - Flaw: Results in UI state loss on configuration changes (e.g., screen rotation) and violates separation of concerns.
+
+* Database Primary Key Conflict (FilmEntity / FilmDao):
+  - FilmEntity defines autoGenerate = true for localId while also storing TMDB's id.
+  - FilmDao performs queries and deletions using id (DELETE FROM films WHERE id = :id).
+  - Flaw: Inserting duplicate movies with auto-generated localId can bypass Room's OnConflictStrategy.REPLACE. TMDB's id should be set as the PrimaryKey.
+
+* Non-Reactive Database State Observation:
+  - SaveFragment loads saved movies only once in onViewCreated() rather than observing a Flow<List<FilmEntity>> or LiveData from Room.
+  - Flaw: Changes to saved movies made in DetailsFragment are not reactively updated in real-time.
+
+* Duplicate Network & Database Client Instantiations:
+  - Fragments build redundant Retrofit instances (Retrofit.Builder().baseUrl(...)...) repeatedly inside event handlers and coroutine blocks rather than using a Singleton or Dependency Injection (Hilt/Koin).
+
+* Uncaught Exception Risk on Trailer Launch:
+  - DetailsFragment launches YouTube intent (startActivity(intent)) without catching ActivityNotFoundException.
+  - Risk: App will crash if a device lacks an application capable of handling the vnd.youtube: URI scheme.
+
+* Redundant Layout Inflations & Lifecycle Flaws:
+  - SecondActivity calls setContentView(binding.root) and inflates ViewBinding twice in onCreate().
+  - MainActivity replaces fragments with new instances on every bottom navigation click rather than preserving fragment state.
+
+* Hardcoded UI Strings:
+  - UI labels and error messages (e.g., "⏱️ Runtime:", "No internet connection", "Enter something") are hardcoded in Kotlin code instead of using res/values/strings.xml for localization.
+
+
+5. RECOMMENDED FUTURE IMPROVEMENTS
+--------------------------------------------------------------------------------
+* Implement MVVM architecture with ViewModel, StateFlow/LiveData, and Repository layers.
+* Introduce Dependency Injection using Hilt or Koin for Retrofit API services and Room Database instances.
+* Move API keys securely into local.properties and export via BuildConfig.
+* Refactor FilmEntity to use TMDB id as PrimaryKey and return Flow<List<FilmEntity>> from FilmDao.
+* Add fallback URL (https://www.youtube.com/watch?v=...) when launching trailers with ActivityNotFoundException handling.
+* Extract all hardcoded strings into res/values/strings.xml.
+
+
+6. NEWLY ADDED FEATURES & CHRONOLOGICAL ENHANCEMENTS
+--------------------------------------------------------------------------------
+* Step 1: Watch Trailer Playback & Fallback Support:
+  - Added video trailer integration fetching official YouTube video keys from the TMDB /videos endpoint.
+  - Implemented Intent handling (vnd.youtube:) to launch the native YouTube application.
+  - Added robust exception handling (ActivityNotFoundException) to gracefully fall back to launching the trailer in a web browser (https://www.youtube.com/watch?v=...) if the YouTube app is unavailable.
+
+* Step 2: "Where to Watch" Stream Provider Logos & Links:
+  - Integrated the TMDB /watch/providers endpoint to display regional streaming availability (flatrate, free, ads, rent, buy) based on the user's locale.
+  - Displays streaming provider logos in a horizontal RecyclerView (recyclerProviderLogos) and includes an external link button (btnWatchLink) directing users to streaming options.
+
+* Step 3: Cast & Crew Information (Credits Integration):
+  - Integrated the TMDB /credits endpoint to extract and display movie production crew and cast members.
+  - Displays the movie Director (txtDirector) and a horizontal list of cast members with profile pictures, actor names, and character roles (recyclerCast).
+
+* Step 4: Similar & Recommended Movies Carousel:
+  - Integrated the TMDB /similar endpoint to fetch recommended films based on the currently viewed movie.
+  - Renders similar movies in a horizontal scrollable carousel (recyclerSimilar), allowing seamless navigation between related movie detail pages.
+
+* Step 5: User Reviews & Audience Feedback:
+  - Integrated the TMDB /reviews endpoint to display authentic user reviews and star ratings.
+  - Renders reviews in a horizontal list (recyclerReviews) with empty state handling (txtNoReviews) when no user reviews exist.
+
+* Step 6: Search Suggestions, Infinite Scrolling & Pagination:
+  - Added multi-page pagination support (page query parameter) across Home screen sections (Trending, Top Rated, Popular) and Search screen grids.
+  - Enhanced search suggestions and live filtering to automatically load subsequent result pages as users scroll further down.
+================================================================================

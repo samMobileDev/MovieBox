@@ -7,18 +7,16 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Search what you want today"
         android:textColor="#FF453A"
-        android:textSize="38sp"
+        android:textSize="32sp"
         android:textStyle="bold"
         android:fontFamily="sans-serif-condensed"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="24dp" />
-
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp" />
 
     <LinearLayout
         android:id="@+id/search_layout"
@@ -28,9 +26,9 @@
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="0dp"
-            android:layout_height="56dp"
+            android:layout_height="52dp"
             android:layout_weight="1"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="8dp"
             app:cardCornerRadius="24dp">
 
             <EditText
@@ -39,7 +37,8 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/white"
                 android:hint="Search Movie..."
-                android:textColorHint="#FF453A"
+                android:textColor="@android:color/black"
+                android:textColorHint="#888888"
                 android:textSize="16sp"
                 android:paddingHorizontal="20dp"
                 android:fontFamily="sans-serif-condensed"
@@ -51,37 +50,112 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnsearch"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
             android:backgroundTint="#FF453A"
             app:cornerRadius="18dp"
             app:icon="@drawable/search"
-            app:iconSize="24dp"
+            app:iconSize="22dp"
             app:iconTint="@android:color/white"
             tools:ignore="SpeakableTextPresentCheck" />
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/filter_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <Spinner
+            android:id="@+id/spinnerGenre"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:background="@android:drawable/btn_dropdown"
+            android:backgroundTint="#FF453A"
+            android:paddingHorizontal="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerYear"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:background="@android:drawable/btn_dropdown"
+            android:backgroundTint="#FF453A"
+            android:paddingHorizontal="8dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/recent_searches_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Recent Searches"
+                android:textColor="#DDDDDD"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/btnClearRecent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Clear All"
+                android:textColor="#FF453A"
+                android:textSize="13sp"
+                android:padding="4dp"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:scrollbars="none">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupRecent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true" />
+
+        </HorizontalScrollView>
+
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="20dp">
-
+        android:layout_marginTop="10dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/searchTrend_R"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone" />
-
 
         <LinearLayout
             android:id="@+id/error_layout"
@@ -93,8 +167,8 @@
 
             <ImageView
                 android:id="@+id/imgNoInternet"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:src="@drawable/wifi" />
 
             <TextView
@@ -106,7 +180,6 @@
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
-
 
         </LinearLayout>
 
